@@ -1,0 +1,55 @@
+#define trigPin 7
+#define echoPin 6
+#define LEDlampRed 10
+#define LEDlampYellow 11
+#define LEDlampGreen 9
+#define soundbuzzer 3
+int sound =100;
+int sound1=700;
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(LEDlampRed, OUTPUT);
+  pinMode(LEDlampYellow, OUTPUT);
+  pinMode(LEDlampGreen, OUTPUT);
+  pinMode(soundbuzzer, OUTPUT);
+}
+
+void loop() {
+  long durationindigit, distanceincm;
+  
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  
+  durationindigit = pulseIn(echoPin, HIGH);
+  distanceincm = (durationindigit/5)/29.1;
+
+  if (distanceincm > 20) {
+    digitalWrite(LEDlampRed, LOW);
+    digitalWrite(LEDlampYellow, LOW);
+    digitalWrite(LEDlampGreen, HIGH);
+    noTone(soundbuzzer);
+  } else if (distanceincm > 10 && distanceincm <= 20) {
+    digitalWrite(LEDlampRed, LOW);
+    digitalWrite(LEDlampGreen, LOW);
+    digitalWrite(LEDlampYellow, HIGH);
+    tone(soundbuzzer, sound);
+  } else {
+    digitalWrite(LEDlampGreen, LOW);
+    digitalWrite(LEDlampYellow, LOW);
+    digitalWrite(LEDlampRed, HIGH);
+    tone(soundbuzzer, sound1);
+    Serial.println("Alert");
+  }
+
+  Serial.print("Distance: ");
+  Serial.print(distanceincm);
+  Serial.println(" cm");
+  
+  delay(500);
+}
